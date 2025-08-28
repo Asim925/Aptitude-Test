@@ -95,7 +95,7 @@ const Page = () => {
       {/* Start Test Button */}
       <div className="flex justify-center">
         <Link
-          href="/test/start"
+          href="/fast/start-test"
           className="px-6 py-4 mt-6 bg-gradient-to-r from-blue-600 to-indigo-800 text-white text-lg font-bold rounded-xl shadow hover:from-blue-700 hover:to-indigo-700 transition-colors"
         >
           🚀 Start My Admission Test Now
