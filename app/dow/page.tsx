@@ -23,6 +23,7 @@ const Page = () => {
           <ul className="list-disc list-inside text-gray-200 space-y-2 text-md sm:text-lg">
             <li>
               <span className="font-semibold">Total Duration:</span> 180 minutes
+              (3 hrs)
             </li>
             <li>
               <span className="font-semibold">Total Questions:</span> 180 MCQs
@@ -89,7 +90,7 @@ const Page = () => {
       {/* Start Test Button */}
       <div className="flex justify-center">
         <Link
-          href="/test/start"
+          href="/dow/start-test"
           className="px-6 py-4 mt-6 bg-gradient-to-r from-red-700 to-purple-800
                      text-white text-lg font-bold rounded-xl shadow
                      hover:from-red-800 hover:to-pink-700 transition-colors"
