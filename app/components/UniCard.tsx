@@ -33,7 +33,7 @@ export default function UniCard({ uni }: Props) {
         {/* Actions */}
         <div className="flex justify-end">
           <Link href={uni.route}>
-            <button className="cursor-pointer px-4 py-2 bg-amber-300  text-black text-sm font-bold rounded-lg shadow hover:bg-amber-400 transition-colors flex justify-center flex-nowrap">
+            <button className="cursor-pointer px-4 py-2 bg-amber-400  text-black text-sm font-bold rounded-lg shadow hover:bg-amber-400 transition-colors flex justify-center flex-nowrap">
               Goto {uni.name[1]} Page
             </button>
           </Link>
