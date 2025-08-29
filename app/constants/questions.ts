@@ -1,11 +1,13 @@
+export interface QuestionItselfType {
+  id: number;
+  question: string;
+  options: string[];
+  correct: string;
+}
+
 export interface Question {
   subject: string;
-  questions: {
-    id: number;
-    question: string;
-    options: string[];
-    correct: string;
-  }[];
+  questions: QuestionItselfType[];
 }
 export const questions: Question[] = [
   {

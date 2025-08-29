@@ -1,8 +1,6 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+"use client";
 import UniCard from "./components/UniCard";
 import { univerisities } from "./constants/constants";
-
-const queryClient = new QueryClient();
 
 export default function Home() {
   return (
@@ -24,14 +22,11 @@ export default function Home() {
           interface.
         </p>
       </main>
-
-      <QueryClientProvider client={queryClient}>
-        <div className=" sm:mx-5 flex justify-center gap-6 flex-wrap">
-          {univerisities.map((uni, index) => (
-            <UniCard uni={uni} key={index} />
-          ))}
-        </div>
-      </QueryClientProvider>
+      <div className=" sm:mx-5 flex justify-center gap-6 flex-wrap">
+        {univerisities.map((uni, index) => (
+          <UniCard uni={uni} key={index} />
+        ))}
+      </div>
     </div>
   );
 }
