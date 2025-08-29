@@ -1,10 +1,10 @@
 import Link from "next/link";
 import React from "react";
-import { dowInfo } from "../constants/constants";
+import { dowSectionsInfo, dowTestInfo } from "../constants/constants";
 
 const Page = () => {
   return (
-    <div className="bg-[url('/main-bg.png')] bg-fixed bg-no-repeat sm:py-10 xl:px-20 sm:px-15 p-5">
+    <div className="bg-[url('/main-bg.png')] bg-fixed min-h-screen bg-cover sm:py-10 xl:px-20 sm:px-15 p-5">
       <main className="sm:text-center">
         <h1 className="text-amber-400 text-3xl sm:text-5xl font-extrabold">
           DOW University - Admission Test
@@ -21,22 +21,12 @@ const Page = () => {
             Test Information
           </h2>
           <ul className="list-disc list-inside text-gray-200 space-y-2 text-md sm:text-lg">
-            <li>
-              <span className="font-semibold">Total Duration:</span> 180 minutes
-              (3 hrs)
-            </li>
-            <li>
-              <span className="font-semibold">Total Questions:</span> 180 MCQs
-            </li>
-            <li>
-              <span className="font-semibold">Negative Marking:</span> None
-            </li>
-            <li>
-              <span className="font-semibold">Calculator:</span> Not Allowed
-            </li>
-            <li>
-              <span className="font-semibold">Navigation:</span> Not Allowed
-            </li>
+            {dowTestInfo.map((item, index) => (
+              <li key={index}>
+                <span className="font-semibold">{item.title}:</span>{" "}
+                {item.value}
+              </li>
+            ))}
           </ul>
         </div>
       </div>
@@ -62,7 +52,7 @@ const Page = () => {
               </tr>
             </thead>
             <tbody>
-              {dowInfo.map((sec, index) => (
+              {dowSectionsInfo.map((sec, index) => (
                 <tr
                   key={index}
                   className={`${

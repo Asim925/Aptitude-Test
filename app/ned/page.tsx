@@ -1,13 +1,13 @@
 import Link from "next/link";
 import React from "react";
-import { nedInfo } from "../constants/constants";
+import { nedSectionsInfo, nedTestsInfo } from "../constants/constants";
 
 const Page = () => {
   return (
-    <div className="bg-[url('/main-bg.png')] bg-fixed bg-no-repeat sm:py-10 xl:px-20 sm:px-15 p-5">
+    <div className="bg-[url('/main-bg.png')] bg-fixed bg-cover min-h-screen sm:py-10 xl:px-20 sm:px-15 p-5">
       <main className="sm:text-center">
         <h1 className="text-amber-400 text-3xl sm:text-5xl font-extrabold">
-          NED University – Admission Test
+          NED University - Admission Test
         </h1>
         <p className="text-md sm:text-lg font-semibold text-gray-100 mt-4 px-2 sm:mt-8">
           A timed, multiple-choice entry assessment covering Mathematics,
@@ -23,22 +23,12 @@ const Page = () => {
             Test Information
           </h2>
           <ul className="list-disc list-inside text-gray-200 space-y-2 text-md sm:text-lg">
-            <li>
-              <span className="font-semibold">Total Duration:</span> 120 minutes
-            </li>
-            <li>
-              <span className="font-semibold">Total Questions:</span> 100 MCQs
-            </li>
-            <li>
-              <span className="font-semibold">Negative Marking:</span> None
-            </li>
-            <li>
-              <span className="font-semibold">Calculator:</span> Not Allowed
-            </li>
-            <li>
-              <span className="font-semibold">Navigation:</span> Once a section
-              is completed or time is up, you cannot return.
-            </li>
+            {nedTestsInfo.map((item, index) => (
+              <li key={index}>
+                <span className="font-semibold">{item.title}:</span>{" "}
+                {item.value}
+              </li>
+            ))}
           </ul>
         </div>
       </div>
@@ -64,7 +54,7 @@ const Page = () => {
               </tr>
             </thead>
             <tbody>
-              {nedInfo.map((sec, index) => (
+              {nedSectionsInfo.map((sec, index) => (
                 <tr
                   key={index}
                   className={`${

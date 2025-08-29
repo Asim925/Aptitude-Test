@@ -1,9 +1,12 @@
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import UniCard from "./components/UniCard";
 import { univerisities } from "./constants/constants";
 
+const queryClient = new QueryClient();
+
 export default function Home() {
   return (
-    <div className="bg-[url('/main-bg.png')] bg-fixed bg-no-repeat  pb-10 ">
+    <div className="bg-[url('/main-bg.png')] bg-fixed bg-cover min-h-screen pb-10 ">
       <main className="p-7 sm:p-10 sm:text-center">
         <h1 className="text-amber-400 max-sm:text-center text-4xl sm:text-5xl font-extrabold">
           University Aptitude Test Practice
@@ -21,11 +24,14 @@ export default function Home() {
           interface.
         </p>
       </main>
-      <div className=" sm:mx-5 flex justify-center gap-6 flex-wrap">
-        {univerisities.map((uni, index) => (
-          <UniCard uni={uni} key={index} />
-        ))}
-      </div>
+
+      <QueryClientProvider client={queryClient}>
+        <div className=" sm:mx-5 flex justify-center gap-6 flex-wrap">
+          {univerisities.map((uni, index) => (
+            <UniCard uni={uni} key={index} />
+          ))}
+        </div>
+      </QueryClientProvider>
     </div>
   );
 }

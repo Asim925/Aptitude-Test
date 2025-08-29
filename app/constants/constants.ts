@@ -22,7 +22,29 @@ export const univerisities = [
   },
 ];
 
-export const fastInfo = [
+export const fastTestInfo = [
+  {
+    title: "Total Duration",
+    value: "120 minutes",
+  },
+  {
+    title: "Total Questions",
+    value: "120 MCQs",
+  },
+  {
+    title: "Negative Marking",
+    value: "Yes (-0.25 in Math/IQ, -0.0833 in English)",
+  },
+  {
+    title: "Calculator",
+    value: "Not Allowed",
+  },
+  {
+    title: "Navigation",
+    value: "Once a section is completed or time is up, you cannot return.",
+  },
+];
+export const fastSectionsInfo = [
   {
     name: "Advanced Mathematics",
     questions: 50,
@@ -52,7 +74,8 @@ export const fastInfo = [
     negative: "-0.0833",
   },
 ];
-export const nedInfo = [
+
+export const nedSectionsInfo = [
   {
     name: "Mathematics",
     questions: 25,
@@ -82,7 +105,30 @@ export const nedInfo = [
     negative: "None",
   },
 ];
-export const dowInfo = [
+export const nedTestsInfo = [
+  {
+    title: "Total Duration",
+    value: "120 minutes",
+  },
+  {
+    title: "Total Questions",
+    value: "100 MCQs",
+  },
+  {
+    title: "Negative Marking",
+    value: "None",
+  },
+  {
+    title: "Calculator",
+    value: "Not Allowed",
+  },
+  {
+    title: "Navigation",
+    value: "Once a section is completed or time is up, you cannot return.",
+  },
+];
+
+export const dowSectionsInfo = [
   {
     name: "Biology",
     questions: 81,
@@ -117,5 +163,28 @@ export const dowInfo = [
     time: "upto you",
     weightage: "5%",
     negative: "None",
+  },
+];
+
+export const dowTestInfo = [
+  {
+    title: "Total Duration",
+    value: "180 minutes (3 hrs)",
+  },
+  {
+    title: "Total Questions",
+    value: "180 MCQs",
+  },
+  {
+    title: "Negative Marking",
+    value: "None",
+  },
+  {
+    title: "Calculator",
+    value: "Not Allowed",
+  },
+  {
+    title: "Navigation",
+    value: "Not Allowed",
   },
 ];
