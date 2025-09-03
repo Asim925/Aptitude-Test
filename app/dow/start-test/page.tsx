@@ -6,7 +6,7 @@ import React, { useEffect, useState } from "react";
 let sub = ["Advanced Mathematics", "Basic Mathematics", "IQ", "English"];
 
 const page = () => {
-  const [selectedSubject, setSelectedSubject] = useState(0); // getting subject from "sub" Array
+  const [selectedSubjectIndex, setSelectedSubjectIndex] = useState(0); // getting subject from "sub" Array
   let [marks, setMarks] = useState(0);
 
   // this type is shit man..!!!
@@ -14,22 +14,23 @@ const page = () => {
     subject: string;
     questions: QuestionItselfType[];
   } | null>(null);
+  const [index, setIndex] = useState(Math.floor(Math.random() * 100));
 
-  // since we got the obj which has objct and array of questions object. so ===>
+  // since we got the obj which has name of subject and array of questions object. so ===>
   const subjectName = data?.subject;
-  const questionData = data?.questions[0];
+  const questionData = data?.questions[index];
 
   // ============ fetching logic ===========>
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     setLoading(true);
-    fetchQuestionsBySubject(sub[selectedSubject])
+    fetchQuestionsBySubject(sub[selectedSubjectIndex])
       .then((data) => {
         setData(data);
       })
       .finally(() => setLoading(false));
-  }, [selectedSubject]);
+  }, [selectedSubjectIndex]);
 
   // ============ when the selection changes ==========>
   const [selectedOption, setSelectedOption] = useState("");
@@ -40,6 +41,7 @@ const page = () => {
 
   const handleNextBTN = () => {
     if (selectedOption === questionData?.correct) setMarks(marks++);
+    setIndex(Math.floor(Math.random() * 100));
     console.log(marks);
   };
 
