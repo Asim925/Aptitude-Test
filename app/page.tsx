@@ -1,11 +1,12 @@
 "use client";
+import Test from "./components/Test";
 import UniCard from "./components/UniCard";
 import { univerisities } from "./constants/constants";
 
 export default function Home() {
   return (
     <div className="bg-[url('/main-bg.png')] bg-fixed bg-cover min-h-screen pb-10 ">
-      <main className="p-7 sm:p-10 sm:text-center">
+      {/* <main className="p-7 sm:p-10 sm:text-center">
         <h1 className="text-amber-400 max-sm:text-center text-4xl sm:text-5xl font-extrabold">
           University Aptitude Test Practice
         </h1>
@@ -26,7 +27,8 @@ export default function Home() {
         {univerisities.map((uni, index) => (
           <UniCard uni={uni} key={index} />
         ))}
-      </div>
+      </div> */}
+      <Test />
     </div>
   );
 }
