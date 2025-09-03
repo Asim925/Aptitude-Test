@@ -51,11 +51,11 @@ const Questions = ({ marks, setMarks }: Props) => {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center bg-[url('/main-bg-dull.png')] bg-fixed bg-cover min-h-screen ">
-      <h1 className="px-5 text-center text-amber-400 text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-extrabold mb-25">
+    <div className="flex flex-col gap-7 justify-center items-center bg-[url('/main-bg-dull.png')] bg-fixed bg-cover min-h-screen">
+      <h1 className="max-sm:mb-10 mb-5 px-5 text-center text-amber-400 text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-extrabold ">
         {subjectName}
       </h1>
-      <div className="min-w-fit">
+      <div className="min-w-fit px-8 sm:px-20">
         <p className="font-bold text-2xl sm:text-3xl lg:text-4xl xl:text-5xl mb-4">
           {questionData?.question}
         </p>
@@ -63,7 +63,7 @@ const Questions = ({ marks, setMarks }: Props) => {
           {questionData?.options.map((option, idx) => (
             <div
               key={idx}
-              className="text-lg sm:text-xl lg:text-2xl xl:text-3xl flex items-center w-full gap-2  sm:gap-4 ps-3 -ml-7"
+              className=" text-lg sm:text-xl lg:text-2xl xl:text-3xl flex items-center w-full gap-2  sm:gap-4 ps-3 -ml-3"
             >
               <input
                 id={option}
@@ -71,27 +71,30 @@ const Questions = ({ marks, setMarks }: Props) => {
                 value={option}
                 checked={selectedOption === option}
                 name="question"
-                className="w-6 h-6 sm:w-8 sm:h-8 accent-amber-400"
+                className="w-6 h-6 cursor-pointer sm:w-8 sm:h-8 accent-amber-400"
                 onChange={(e) => handleChange(e.target.value)}
               />
-              <label htmlFor={option} className="w-full py-3 ms-2  text-white">
+              <label
+                htmlFor={option}
+                className="w-full py-3 ms-2 cursor-pointer text-white"
+              >
                 {option}
               </label>
             </div>
           ))}
         </div>
       </div>
-      <div className="mt-20 flex sm:gap-5 max-sm:flex-col items-center">
+      <div className="flex sm:gap-5 max-sm:flex-col items-center">
         <button
           disabled={!selectedOption}
           onClick={handleNextBTN}
-          className="relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden sm:text-lg text-sm font-medium  rounded-lg group bg-gradient-to-br from-yellow-700 to-orange-800 group-hover:from-amber-700 group-hover:to-orange-800 text-white focus:outline-none "
+          className="cursor-pointer relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden sm:text-lg text-sm font-medium  rounded-lg group bg-gradient-to-br from-yellow-700 to-orange-800 group-hover:from-amber-700 group-hover:to-orange-800 text-white focus:outline-none "
         >
           <span className="relative px-5 py-2.5 transition-all ease-in duration-75 bg-amber-950  rounded-md group-hover:bg-transparent ">
             {!selectedOption ? "Select an option first" : "Next Question"}
           </span>
         </button>
-        <button className="max-sm:w-fit  relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden text-sm sm:text-lg font-medium  rounded-lg group bg-gradient-to-br from-yellow-700 to-orange-800 group-hover:from-amber-700 group-hover:to-orange-800 text-white focus:outline-none ">
+        <button className=" cursor-pointer max-sm:w-fit  relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden text-sm sm:text-lg font-medium  rounded-lg group bg-gradient-to-br from-yellow-700 to-orange-800 group-hover:from-amber-700 group-hover:to-orange-800 text-white focus:outline-none ">
           <span className="relative px-5 py-2.5 transition-all ease-in duration-75 bg-amber-950  rounded-md group-hover:bg-transparent ">
             Skip
           </span>
