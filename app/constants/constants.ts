@@ -1,3 +1,10 @@
+export interface Question {
+  id: number;
+  question: string;
+  options: string[];
+  correct: string;
+}
+
 export const univerisities = [
   {
     name: ["NED University of Engineering & Technology", "(NED)"],
