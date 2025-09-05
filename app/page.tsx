@@ -1,5 +1,4 @@
 "use client";
-import Test from "./components/Test";
 import UniCard from "./components/UniCard";
 import { univerisities } from "./constants/constants";
 
