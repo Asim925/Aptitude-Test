@@ -10,7 +10,11 @@ interface Props {
 const Questions = ({ marks, setMarks }: Props) => {
   const [sectionIDX, setSectionIDX] = useState(0);
   const [section, setSection] = useState(dowSectionsInfo[sectionIDX]);
+
   const [reply, setReply] = useState<Question[]>([]);
+  const [batch, setBatch] = useState(1);
+  const [queIDX, setQueIDX] = useState(0);
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -25,7 +29,6 @@ const Questions = ({ marks, setMarks }: Props) => {
       });
 
       const data = await res.json();
-      console.log("Groq AI Raw Response:", data.reply);
 
       let parsedReply: Question[] = [];
       if (typeof data.reply === "string") {
@@ -44,7 +47,7 @@ const Questions = ({ marks, setMarks }: Props) => {
         parsedReply = data.reply;
       }
 
-      setReply(parsedReply || []);
+      setReply((prev) => [...prev, ...parsedReply]);
     } catch (err) {
       console.error("Fetch error:", err);
       setError("❌ Failed to get AI response");
@@ -53,52 +56,72 @@ const Questions = ({ marks, setMarks }: Props) => {
     }
   };
 
-  useEffect(() => {
-    const msg = `
-      Generate a JSON array of ${section.questions} MCAT questions from the latest Federal and Sindh board books of ${section.name}.
-      The JSON must follow this structure exactly: 
-      [
-        {
-          "id": Number,
-          "question": "string",
-          "options": ["", "", "", ""],
-          "correct": "string"
-        },...
-      ]
+  const msg = `
+      Generate a JSON array of 10 MCAT questions from the of latest books of Federal and Sindh board of strict this subject: "${section.name}".
+      questions should not deviate from the subject. If the subject is English, then you have to give "grammatical questions" only.
+      Questions should be at the level of **Pakistani University admission tests (ECAT, MDCAT, NTS, etc.)
 
       Difficulty distribution:
       - 20% Hard
       - 50% Medium
       - 30% Easy
 
-      Rules:
+      Rules: 
       - No explanations, no extra text, no markdown. Return ONLY valid JSON. 
       - Each question must have exactly 4 options.
       - The "correct" field must match one of the options.
-      - IDs should start from 1 and increment.
+      Format must be **strict JSON array** like this:
+      [
+        {
+          "question": "....?",
+          "options": ["..", "...", "....", "..."],
+          "correct": "..."
+        },
+        {
+          "question": "",
+          "options": ["", "", "", ""],
+          "correct": ""
+        }
+      ]
+      6. Ensure:
+        - Each question has **1 correct answer only**.
+        - options must always contain **exactly 4 unique choices**.
+        - Correct option must be included inside the options.
+        - Do not include explanations, only JSON.
+      Return only the JSON array, nothing else.
     `;
+
+  useEffect(() => {
     sendMessage(msg);
   }, [section]);
 
   //  GROG AI end !!! =========================================================================
 
-  const [queIDX, setQueIDX] = useState(0);
+  const currentQuestion = reply[queIDX];
   const [selectedOption, setSelectedOption] = useState("");
 
-  const currentQuestion = reply[queIDX];
   const handleChange = (value: string) => {
     setSelectedOption(value);
   };
 
   const handleNextBTN = () => {
     if (selectedOption === currentQuestion?.correct) setMarks(marks + 1);
-    setSelectedOption("");
-    setQueIDX(queIDX + 1);
 
-    if (queIDX == reply.length - 1) {
-      setSectionIDX(sectionIDX + 1);
-      setSection(dowSectionsInfo[sectionIDX]);
+    setSelectedOption("");
+    const nextIndex = queIDX + 1;
+    setQueIDX(nextIndex);
+
+    // if user has reached the last question in the current batch
+    if (nextIndex === reply.length - 1) {
+      sendMessage(msg);
+      setBatch(batch + 1); // 👈 fetch next batch and append
     }
+
+    // section changing
+    if (batch * 10 == section.questions) setSectionIDX(sectionIDX + 1);
+    useEffect(() => {
+      setSection(dowSectionsInfo[sectionIDX]);
+    }, [sectionIDX]);
   };
 
   return (
