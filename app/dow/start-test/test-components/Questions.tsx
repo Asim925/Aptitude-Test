@@ -4,12 +4,12 @@ import React, { useEffect, useState } from "react";
 
 interface Props {
   marks: number;
-  setMarks: (marks: number) => void;
+  setMarks: React.Dispatch<React.SetStateAction<number>>;
 }
 
 const Questions = ({ marks, setMarks }: Props) => {
   const [sectionIDX, setSectionIDX] = useState(0);
-  const [section, setSection] = useState(dowSectionsInfo[sectionIDX]);
+  const section = dowSectionsInfo[sectionIDX]; // ✅ derived, no extra useState
 
   const [reply, setReply] = useState<Question[]>([]);
   const [batch, setBatch] = useState(1);
@@ -17,45 +17,9 @@ const Questions = ({ marks, setMarks }: Props) => {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [completed, setCompleted] = useState(false);
 
-  //  GROG AI !!! =========================================================================
-  const sendMessage = async (message: string) => {
-    setLoading(true);
-    try {
-      const res = await fetch("/api/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message }),
-      });
-
-      const data = await res.json();
-
-      let parsedReply: Question[] = [];
-      if (typeof data.reply === "string") {
-        const start = data.reply.indexOf("[");
-        const end = data.reply.lastIndexOf("]");
-        if (start !== -1 && end !== -1) {
-          try {
-            const jsonString = data.reply.slice(start, end + 1);
-            parsedReply = JSON.parse(jsonString);
-          } catch (err) {
-            console.error("JSON parse error:", err);
-            setError("❌ Invalid JSON from AI");
-          }
-        }
-      } else if (Array.isArray(data.reply)) {
-        parsedReply = data.reply;
-      }
-
-      setReply((prev) => [...prev, ...parsedReply]);
-    } catch (err) {
-      console.error("Fetch error:", err);
-      setError("❌ Failed to get AI response");
-    } finally {
-      setLoading(false);
-    }
-  };
-
+  // =============== Prompt ===============
   const msg = `
       Generate a JSON array of 10 MCAT questions from the of latest books of Federal and Sindh board of strict this subject: "${section.name}".
       questions should not deviate from the subject. If the subject is English, then you have to give "grammatical questions" only.
@@ -91,11 +55,49 @@ const Questions = ({ marks, setMarks }: Props) => {
       Return only the JSON array, nothing else.
     `;
 
+  // =============== API Call ===============
+  const sendMessage = async (message: string) => {
+    setLoading(true);
+    try {
+      const res = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message }),
+      });
+
+      const data = await res.json();
+
+      let parsedReply: Question[] = [];
+      if (typeof data.reply === "string") {
+        const start = data.reply.indexOf("[");
+        const end = data.reply.lastIndexOf("]");
+        if (start !== -1 && end !== -1) {
+          try {
+            const jsonString = data.reply.slice(start, end + 1);
+            parsedReply = JSON.parse(jsonString);
+          } catch (err) {
+            console.error("JSON parse error:", err);
+            setError("❌ Invalid JSON from AI");
+          }
+        }
+      } else if (Array.isArray(data.reply)) {
+        parsedReply = data.reply;
+      }
+
+      setReply(parsedReply); // ✅ fresh batch each time
+      setQueIDX(0);
+    } catch (err) {
+      console.error("Fetch error:", err);
+      setError("❌ Failed to get AI response");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Load first section
   useEffect(() => {
     sendMessage(msg);
-  }, [section]);
-
-  //  GROG AI end !!! =========================================================================
+  }, [sectionIDX]);
 
   const currentQuestion = reply[queIDX];
   const [selectedOption, setSelectedOption] = useState("");
@@ -104,25 +106,44 @@ const Questions = ({ marks, setMarks }: Props) => {
     setSelectedOption(value);
   };
 
+  // =============== Next Button ===============
   const handleNextBTN = () => {
-    if (selectedOption === currentQuestion?.correct) setMarks(marks + 1);
+    if (selectedOption === currentQuestion?.correct) {
+      setMarks((prev) => prev + 1);
+    }
 
     setSelectedOption("");
+
     const nextIndex = queIDX + 1;
     setQueIDX(nextIndex);
 
-    // if user has reached the last question in the current batch
-    if (nextIndex === reply.length - 1) {
-      sendMessage(msg);
-      setBatch(batch + 1); // 👈 fetch next batch and append
+    // If we've reached end of current batch
+    if (nextIndex === reply.length) {
+      if (batch * 10 >= section.questions) {
+        if (sectionIDX < dowSectionsInfo.length - 1) {
+          setSectionIDX((prev) => prev + 1); // ✅ next section
+          setBatch(1);
+        } else {
+          setCompleted(true); // ✅ no more sections
+        }
+      } else {
+        setBatch((prev) => prev + 1);
+        sendMessage(msg); // ✅ fetch next batch of same section
+      }
     }
-
-    // section changing
-    if (batch * 10 == section.questions) setSectionIDX(sectionIDX + 1);
-    useEffect(() => {
-      setSection(dowSectionsInfo[sectionIDX]);
-    }, [sectionIDX]);
   };
+
+  // =============== UI ===============
+  if (completed) {
+    return (
+      <div className="flex flex-col gap-7 justify-center items-center min-h-screen bg-[url('/main-bg-dull.png')] bg-fixed bg-cover">
+        <h1 className="text-amber-400 text-5xl font-bold">
+          🎉 Test Completed!
+        </h1>
+        <p className="text-white text-2xl">Your score: {marks}</p>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-7 justify-center items-center bg-[url('/main-bg-dull.png')] bg-fixed bg-cover min-h-screen">
@@ -135,14 +156,14 @@ const Questions = ({ marks, setMarks }: Props) => {
         <p className="text-white text-xl">Loading questions...</p>
       ) : reply.length > 0 ? (
         <div className="min-w-fit px-8 sm:px-20">
-          <p className="font-bold text-2xl sm:text-3xl lg:text-3xl xl:text-5xl mb-4">
-            {currentQuestion?.question}
+          <p className="mb-4 text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl">
+            {queIDX + 1}. {currentQuestion?.question}
           </p>
           <div>
             {currentQuestion?.options.map((option, idx) => (
               <div
                 key={idx}
-                className="text-lg sm:text-xl lg:text-2xl xl:text-2xl flex items-center w-full gap-2 sm:gap-4 ps-3 -ml-3"
+                className="text-lg sm:text-xl  flex items-center w-full gap-2 sm:gap-4 ps-3 -ml-3"
               >
                 <input
                   id={option}
@@ -150,7 +171,7 @@ const Questions = ({ marks, setMarks }: Props) => {
                   value={option}
                   checked={selectedOption === option}
                   name="question"
-                  className="w-6 h-6 cursor-pointer sm:w-8 sm:h-8 accent-amber-400"
+                  className="w-4 h-4 cursor-pointer sm:w-6 sm:h-6 accent-orange-600"
                   onChange={(e) => handleChange(e.target.value)}
                 />
                 <label

@@ -3,7 +3,7 @@ import { useState } from "react";
 import Questions from "./test-components/Questions";
 
 const Page = () => {
-  const [marks, setMarks] = useState(0);
+  const [marks, setMarks] = useState<number>(0);
 
   return <Questions marks={marks} setMarks={setMarks} />;
 };
