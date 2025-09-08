@@ -21,8 +21,10 @@ const Questions = ({ marks, setMarks }: Props) => {
 
   // =============== Prompt ===============
   const msg = `
-      Generate a JSON array of 10 MCAT questions from the of latest books of Federal and Sindh board of strict this subject: "${section.name}".
-      questions should not deviate from the subject. If the subject is English, then you have to give "grammatical questions" only.
+      Generate a "JSON array" of 10 MCAT questions from the of latest books of Federal and Sindh board of strict this subject: "${section.name}".
+      Do not use inline math formatting or LaTeX equations. Write every math, physics, and chemistry question exactly in the style of a textbook, using normal text sentences. For example, instead of writing x = 2, 
+      write 'If the value of x is 2'. Avoid symbols like ^, _, *, or $. Write questions in clean English sentences, just like they appear in board exam books
+      questions should not deviate from the subject. If the subject is English, then you have to give "comprehension, vocabulary, and logical English usage, grammatical devices".
       Questions should be at the level of **Pakistani University admission tests (ECAT, MDCAT, NTS, etc.)
 
       Difficulty distribution:
@@ -31,10 +33,10 @@ const Questions = ({ marks, setMarks }: Props) => {
       - 30% Easy
 
       Rules: 
-      - No explanations, no extra text, no markdown. Return ONLY valid JSON. 
+      - "No explanations", "no extra text", no markdown". "Return ONLY valid JSON". (VERY IMPORTANT !!!)
       - Each question must have exactly 4 options.
       - The "correct" field must match one of the options.
-      Format must be **strict JSON array** like this:
+      Format must be "**strict JSON array**" like this:
       [
         {
           "question": "....?",
@@ -47,7 +49,7 @@ const Questions = ({ marks, setMarks }: Props) => {
           "correct": ""
         }
       ]
-      6. Ensure:
+     Ensure:
         - Each question has **1 correct answer only**.
         - options must always contain **exactly 4 unique choices**.
         - Correct option must be included inside the options.
@@ -107,6 +109,8 @@ const Questions = ({ marks, setMarks }: Props) => {
   };
 
   // =============== Next Button ===============
+  const nextIndex = queIDX + 1;
+
   const handleNextBTN = () => {
     if (selectedOption === currentQuestion?.correct) {
       setMarks((prev) => prev + 1);
@@ -114,7 +118,6 @@ const Questions = ({ marks, setMarks }: Props) => {
 
     setSelectedOption("");
 
-    const nextIndex = queIDX + 1;
     setQueIDX(nextIndex);
 
     // If we've reached end of current batch
@@ -133,21 +136,22 @@ const Questions = ({ marks, setMarks }: Props) => {
     }
   };
 
+  const [skipped, setSkipped] = useState<Question[]>([]);
+
+  const handleSkipBTN = () => {
+    setSkipped([...skipped, currentQuestion]);
+    setQueIDX(nextIndex);
+  };
+
   // =============== UI ===============
   if (completed) {
-    return (
-      <div className="flex flex-col gap-7 justify-center items-center min-h-screen bg-[url('/main-bg-dull.png')] bg-fixed bg-cover">
-        <h1 className="text-amber-400 text-5xl font-bold">
-          🎉 Test Completed!
-        </h1>
-        <p className="text-white text-2xl">Your score: {marks}</p>
-      </div>
-    );
+    setReply(skipped);
+    setQueIDX(1);
   }
 
   return (
     <div className="flex flex-col gap-7 justify-center items-center bg-[url('/main-bg-dull.png')] bg-fixed bg-cover min-h-screen">
-      <h1 className="max-sm:mb-10 mb-5 px-5 text-center text-amber-400 text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-extrabold ">
+      <h1 className="mb-5 px-5 text-center text-amber-400 text-5xl lg:text-6xl xl:text-7xl font-extrabold ">
         {section.name}
       </h1>
 
@@ -155,15 +159,17 @@ const Questions = ({ marks, setMarks }: Props) => {
       {loading ? (
         <p className="text-white text-xl">Loading questions...</p>
       ) : reply.length > 0 ? (
-        <div className="min-w-fit px-8 sm:px-20">
-          <p className="mb-4 text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl">
-            {queIDX + 1}. {currentQuestion?.question}
+        <div className="md:mx-20 lg:mx-40 mx-5 min-w-fit  border rounded-2xl backdrop-blur-sm bg-orange-800/5 border-amber-600 md:p-10 p-6">
+          <p className="mb-4 text-md sm:text-lg md:text-xl lg:text-2xl ">
+            {!completed
+              ? `${queIDX + 1 + batch * 10 - 10}. ${currentQuestion?.question}`
+              : `${queIDX}. ${currentQuestion?.question}`}
           </p>
           <div>
             {currentQuestion?.options.map((option, idx) => (
               <div
                 key={idx}
-                className="text-lg sm:text-xl  flex items-center w-full gap-2 sm:gap-4 ps-3 -ml-3"
+                className="text-md sm:text-lg flex items-center w-full gap-1 ps-3 -ml-3"
               >
                 <input
                   id={option}
@@ -171,12 +177,12 @@ const Questions = ({ marks, setMarks }: Props) => {
                   value={option}
                   checked={selectedOption === option}
                   name="question"
-                  className="w-4 h-4 cursor-pointer sm:w-6 sm:h-6 accent-orange-600"
+                  className="w-4 h-4 cursor-pointer sm:w-5 sm:h-5 md:w-6 md:h-6 accent-orange-400"
                   onChange={(e) => handleChange(e.target.value)}
                 />
                 <label
                   htmlFor={option}
-                  className="w-full py-3 ms-2 cursor-pointer text-white"
+                  className="w-full py-2 ms-2 cursor-pointer text-white"
                 >
                   {option}
                 </label>
@@ -188,22 +194,41 @@ const Questions = ({ marks, setMarks }: Props) => {
         <p className="text-white text-xl">No questions available</p>
       )}
 
-      <div className="flex sm:gap-5 max-sm:flex-col items-center">
+      {!error && (
+        <div className="flex gap-2 sm:gap-5 max-sm:flex-col items-center">
+          <button
+            disabled={!selectedOption}
+            onClick={handleNextBTN}
+            className="cursor-pointer relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden sm:text-lg text-sm font-medium rounded-lg group bg-gradient-to-br from-yellow-700 to-orange-800 group-hover:from-amber-700 group-hover:to-orange-800 text-white focus:outline-none"
+          >
+            <span className="relative px-5 py-2.5 transition-all ease-in duration-75 bg-amber-950 rounded-md group-hover:bg-transparent">
+              {!selectedOption ? "Select an option first" : "Next Question"}
+            </span>
+          </button>
+          <button
+            disabled={completed && skipped.length > 0}
+            onClick={handleSkipBTN}
+            className="cursor-pointer max-sm:w-fit relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden text-sm sm:text-lg font-medium rounded-lg group bg-gradient-to-br from-yellow-700 to-orange-800 group-hover:from-amber-700 group-hover:to-orange-800 text-white focus:outline-none"
+          >
+            <span className="relative px-5 py-2.5 transition-all ease-in duration-75 bg-amber-950 rounded-md group-hover:bg-transparent">
+              Skip
+            </span>
+          </button>
+        </div>
+      )}
+      {error && (
         <button
-          disabled={!selectedOption}
-          onClick={handleNextBTN}
-          className="cursor-pointer relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden sm:text-lg text-sm font-medium rounded-lg group bg-gradient-to-br from-yellow-700 to-orange-800 group-hover:from-amber-700 group-hover:to-orange-800 text-white focus:outline-none"
+          onClick={() => {
+            sendMessage(msg);
+            setError("");
+          }}
+          className="cursor-pointer max-sm:w-fit relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden text-sm sm:text-lg font-medium rounded-lg group bg-gradient-to-br from-yellow-700 to-orange-800 group-hover:from-amber-700 group-hover:to-orange-800 text-white focus:outline-none"
         >
           <span className="relative px-5 py-2.5 transition-all ease-in duration-75 bg-amber-950 rounded-md group-hover:bg-transparent">
-            {!selectedOption ? "Select an option first" : "Next Question"}
+            Reload Questions
           </span>
         </button>
-        <button className="cursor-pointer max-sm:w-fit relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden text-sm sm:text-lg font-medium rounded-lg group bg-gradient-to-br from-yellow-700 to-orange-800 group-hover:from-amber-700 group-hover:to-orange-800 text-white focus:outline-none">
-          <span className="relative px-5 py-2.5 transition-all ease-in duration-75 bg-amber-950 rounded-md group-hover:bg-transparent">
-            Skip
-          </span>
-        </button>
-      </div>
+      )}
     </div>
   );
 };

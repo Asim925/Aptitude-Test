@@ -150,27 +150,27 @@ export const dowSectionsInfo = [
     weightage: "25%",
     negative: "None",
   },
-  {
-    name: "Physics",
-    questions: 40,
-    time: "upto you",
-    weightage: "20%",
-    negative: "None",
-  },
-  {
-    name: "English",
-    questions: 10,
-    time: "upto you",
-    weightage: "5%",
-    negative: "None",
-  },
-  {
-    name: "Logical Reasoning",
-    questions: 10,
-    time: "upto you",
-    weightage: "5%",
-    negative: "None",
-  },
+  // {
+  //   name: "Physics",
+  //   questions: 40,
+  //   time: "upto you",
+  //   weightage: "20%",
+  //   negative: "None",
+  // },
+  // {
+  //   name: "English",
+  //   questions: 10,
+  //   time: "upto you",
+  //   weightage: "5%",
+  //   negative: "None",
+  // },
+  // {
+  //   name: "Logical Reasoning",
+  //   questions: 10,
+  //   time: "upto you",
+  //   weightage: "5%",
+  //   negative: "None",
+  // },
 ];
 
 export const dowTestInfo = [
