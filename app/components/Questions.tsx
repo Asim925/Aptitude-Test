@@ -63,7 +63,7 @@ Write equations exactly like in board textbooks.
   }, [section.name]);
 
   // =============== API Call ===============
- 
+
   const sendMessage = async (message: string) => {
     setLoading(true);
     setError("");
@@ -89,7 +89,7 @@ Write equations exactly like in board textbooks.
           parsedReply = JSON.parse(data.reply);
         } catch (err) {
           console.error("❌ JSON parse error:", err);
-          setError("❌ Invalid JSON received");
+          setError("❌ Sometimes AI responses unusually, please try again");
           setReply([]);
           setLoading(false);
           return;
