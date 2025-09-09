@@ -1,3 +1,23 @@
+export interface University {
+  name: string[];
+  img: string;
+  text: string;
+  route: string;
+}
+
+export interface SectionsInfo {
+  name: string;
+  questions: number;
+  time: string; // per section
+  weightage: string;
+  negative: string;
+}
+
+export interface TestInfo {
+  title: string;
+  value: string;
+}
+
 export interface Question {
   id: number;
   question: string;
@@ -7,22 +27,19 @@ export interface Question {
 
 export const univerisities = [
   {
-    name: ["NED University of Engineering & Technology", "(NED)"],
+    name: ["NED University of Engineering & Technology", "NED"],
     img: "/NED.jpg",
     text: "Prepare for one of top engineering universities. The NED test evaluates your skills in Mathematics, Physics, English, and Logical Reasoning, ensuring you are ready for an engineering career.",
     route: "/ned",
   },
   {
-    name: [
-      "National University of Computer and Emerging Sciences",
-      "(FAST NUCES)",
-    ],
+    name: ["National University of Computer and Emerging Sciences", "FAST"],
     img: "/FAST.jpg",
     text: "Known for excellence in Computer Science and Engineering, FAST aptitude test challenges you in Mathematics, English, Analytical Ability, and IQ skills. Perfect for students aiming for a future in technology.",
     route: "/fast",
   },
   {
-    name: ["Dow University of Health Sciences", "(DUHS)"],
+    name: ["Dow University of Health Sciences", "DUHS"],
     img: "/DOW.png",
     text: "Aspiring to join the medical field? The DOW test measures your knowledge in Biology, Chemistry, Physics, and English, designed for students passionate about medicine and healthcare.",
     route: "/dow",
@@ -147,30 +164,30 @@ export const dowSectionsInfo = [
     name: "Chemistry",
     questions: 40,
     time: "upto you",
-    weightage: "25%",
+    weightage: "22%",
     negative: "None",
   },
-  // {
-  //   name: "Physics",
-  //   questions: 40,
-  //   time: "upto you",
-  //   weightage: "20%",
-  //   negative: "None",
-  // },
-  // {
-  //   name: "English",
-  //   questions: 10,
-  //   time: "upto you",
-  //   weightage: "5%",
-  //   negative: "None",
-  // },
-  // {
-  //   name: "Logical Reasoning",
-  //   questions: 10,
-  //   time: "upto you",
-  //   weightage: "5%",
-  //   negative: "None",
-  // },
+  {
+    name: "Physics",
+    questions: 40,
+    time: "upto you",
+    weightage: "22%",
+    negative: "None",
+  },
+  {
+    name: "English",
+    questions: 10,
+    time: "upto you",
+    weightage: "12%",
+    negative: "None",
+  },
+  {
+    name: "Logical Reasoning",
+    questions: 10,
+    time: "upto you",
+    weightage: "12%",
+    negative: "None",
+  },
 ];
 
 export const dowTestInfo = [
