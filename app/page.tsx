@@ -11,9 +11,10 @@ export default function Home() {
           University Aptitude Test Practice
         </h1>
         <p className="text-xl font-semibold text-gray-100 mt-8">
-          "Test your skills and get exam-ready! Select the university you aim to
-          take admission in and practice with real-style aptitude questions.
-          Choose wisely and start your journey toward success."
+          `&quot;`Test your skills and get exam-ready! Select the university you
+          aim to take admission in and practice with real-style aptitude
+          questions. Choose wisely and start your journey toward
+          success.`&quot;`
         </p>
         <p className="text-xl text-gray-200">
           This platform is a practice portal for university aptitude tests in
