@@ -109,7 +109,7 @@ const Questions = ({ sectionsInfo, time, marks, setMarks }: Props) => {
   // Load first section
   useEffect(() => {
     sendMessage(msg);
-  }, [sectionIDX]);
+  }, [sectionIDX, msg]);
 
   const currentQuestion = reply[queIDX];
   const [selectedOption, setSelectedOption] = useState("");
@@ -176,13 +176,16 @@ const Questions = ({ sectionsInfo, time, marks, setMarks }: Props) => {
     }
   };
 
-  // =============== UI ===============
+  // GPT said, if we dont add the changing value in dependencies,
+  //  it would behave badly. so a warning during build
   useEffect(() => {
     setReply(skipped);
     setQueIDX(1);
   }, [ApiCompleted]);
 
   const [testCompleted, setTestCompleted] = useState(false);
+
+  // ======================= UI ========================= //
 
   if (testCompleted) return <Result marks={marks} outOf={180} />;
 
