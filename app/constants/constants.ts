@@ -40,7 +40,7 @@ export const univerisities = [
   },
   {
     name: ["Dow University of Health Sciences", "DUHS"],
-    img: "/DOW.png",
+    img: "/DOW.jpg",
     text: "Aspiring to join the medical field? The DOW test measures your knowledge in Biology, Chemistry, Physics, and English, designed for students passionate about medicine and healthcare.",
     route: "/dow",
   },
