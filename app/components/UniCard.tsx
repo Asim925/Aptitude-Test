@@ -31,7 +31,7 @@ export default function UniCard({ uni }: Props) {
           <Link href={uni.route}>
             <button className="cursor-pointer max-sm:w-fit relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden text-sm sm:text-md font-medium rounded-lg group bg-gradient-to-br from-yellow-700 to-orange-800 group-hover:from-amber-700 group-hover:to-orange-800 text-white focus:outline-none">
               <span className="relative px-5 py-2.5 transition-all ease-in duration-75 bg-amber-950 rounded-md group-hover:bg-transparent">
-                Goto `&quot;`{uni.name[1]}`&quot;` Page
+                Goto &quot;{uni.name[1]}&quot; Page
               </span>
             </button>
           </Link>
