@@ -27,43 +27,55 @@ const Questions = ({ sectionsInfo, time, marks, setMarks }: Props) => {
 
   // =============== Prompt ===============
   const msg = `
-      Generate a "JSON array" of exactly 10 Multiple Choice Questions (MCQs) strictly based on the **latest textbooks of Federal and Sindh boards** for the given subject: "${section.name}" always. Questions should not deviate from the subject. 
+    You are an exam paper generator.
 
-        Guidelines:
-        - Questions must match the **style and wording of Pakistani ECAT and MCAT admission tests**, using only material from Federal and Sindh board textbooks.
-        - For Science subjects (Mathematics, Physics, Chemistry, Biology):
-          - Write equations and values exactly as they appear in board textbooks.
-          - Use proper **subscripts** and **superscripts** (e.g., H₂O, x², CO₂, Na⁺).
-          - Strictly AVOID non-textbook symbols like "^", "_", "*", "$", or LaTeX/inline math formatting.
-          - Questions must sound like they were copied directly from a board exam book, written in **clear textbook English sentences**.
-        - For English:
-          - Focus on **comprehension passages, vocabulary, grammar usage, sentence correction, and logical reasoning**.
-          - Do NOT include poems, stories, or irrelevant textbook literature.
-        - Difficulty levels must follow this distribution:
-          - 20% Hard
-          - 50% Medium
-          - 30% Easy
+TASK:
+Generate a JSON array of exactly 10 Multiple Choice Questions (MCQs) strictly based on the *latest Pakistani Federal and Sindh Board textbooks* for the subject: "${section.name}".
 
-        Rules:
-        - ❌ No explanations, ❌ no notes, ❌ no markdown, ❌ no introductions (e.g., "Here are 10 questions").
-        - ✅ Return ONLY valid JSON (this is **very important**).
-        - Each question must have exactly 4 options, with only 1 correct option.
-        - All 4 options must be unique.
-        - The "correct" field must exactly match one of the options.
+HARD RULES (must be obeyed):
+1. The subject must be exactly "${section.name}". Do not switch to any other subject.
+2. Return ONLY valid JSON. No explanations, no notes, no markdown, no text before or after JSON.
+3. Each object in the array must follow this schema exactly:
+   {
+     "question": "string",
+     "options": ["string", "string", "string", "string"],
+     "correct": "string"
+   }
+4. There must be exactly 10 objects in the array.
+5. Each question must have 4 **unique** options.
+6. The "correct" value must exactly match one of the options.
+7. Use *only* board-style English wording (as in ECAT/MCAT papers).
 
-        Output format (STRICTLY follow this structure):
-        [
-          {
-            "question": "....?",
-            "options": ["..", "...", "....", "..."],
-            "correct": "..."
-          },
-          {
-            "question": "",
-            "options": ["", "", "", ""],
-            "correct": ""
-          }
-        ]
+SUBJECT-SPECIFIC RULES:
+- For Mathematics, Physics, Chemistry, Biology:
+  - Write equations exactly as in board textbooks.
+  - IMPORTANT: All exponents and subscripts must be written using Unicode characters exactly as in board textbooks.
+    - Correct: H₂O, CO₂, Na⁺, x²
+    - Incorrect: H2O, CO2, Na+, x^2, CO_2, Never use ^, _, *, $, or LaTeX.
+
+  - Do NOT use ^, _, *, $, or LaTeX/inline math formatting.
+- For English:
+  - Focus on comprehension, grammar usage, vocabulary, sentence correction, logical reasoning.
+  - No poems, stories, or irrelevant literature.
+
+DIFFICULTY DISTRIBUTION:
+- 20% Hard
+- 50% Medium
+- 30% Easy
+
+OUTPUT FORMAT (strictly this):
+[
+  {
+    "question": "...?",
+    "options": ["...", "...", "...", "..."],
+    "correct": "..."
+  },
+  {
+    "question": "...?",
+    "options": ["...", "...", "...", "..."],
+    "correct": "..."
+  }
+]
 
     `;
 
