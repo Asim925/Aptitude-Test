@@ -63,35 +63,7 @@ Write equations exactly like in board textbooks.
   }, [section.name]);
 
   // =============== API Call ===============
-  function tryParse(raw: string): Question[] {
-    const start = raw.indexOf("[");
-    const end = raw.lastIndexOf("]");
-    if (start === -1 || end === -1) return [];
-
-    let jsonString = raw.slice(start, end + 1);
-
-    // Fix common Grok mistakes
-    jsonString = jsonString
-      .replace(/[“”]/g, '"') // smart quotes → normal quotes
-      .replace(/(\w+)\s*:/g, '"$1":') // unquoted keys → quoted
-      .replace(/,\s*}/g, "}"); // trailing commas
-
-    try {
-      const parsed = JSON.parse(jsonString);
-
-      // Fix "all options in one string"
-      parsed.forEach((q: any) => {
-        if (typeof q.options === "string" && q.options.includes(",")) {
-          q.options = q.options.split(",").map((opt: string) => opt.trim());
-        }
-      });
-
-      return parsed;
-    } catch (err) {
-      console.error("❌ JSON parse failed even after cleaning:", err);
-      return [];
-    }
-  }
+ 
   const sendMessage = async (message: string) => {
     setLoading(true);
     setError("");
