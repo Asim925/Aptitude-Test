@@ -22,7 +22,7 @@ const Details = ({ uni, sectionsInfo, testInfo }: Props) => {
         </p>
       </main>
       <div className="mt-5">
-        <div className="border rounded-2xl backdrop-blur-sm bg-orange-800/10 border-amber-600 p-6">
+        <div className="border shadow-[0_2px_10px_rgba(217,119,6,0.45)] rounded-2xl backdrop-blur-sm bg-orange-800/10 border-amber-600 p-6">
           <h2 className="text-amber-400 text-2xl sm:text-3xl font-bold mb-4">
             Test Information
           </h2>
@@ -42,7 +42,7 @@ const Details = ({ uni, sectionsInfo, testInfo }: Props) => {
         <h2 className="text-amber-400  text-2xl sm:text-3xl font-bold mb-4 text-center">
           Section-wise Breakdown
         </h2>
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto shadow-[0_2px_10px_rgba(217,119,6,0.45)]">
           <table className="w-full backdrop-blur-sm bg-black/50 border-collapse text-gray-100 text-sm sm:text-lg">
             <thead>
               <tr className="bg-amber-800/70">

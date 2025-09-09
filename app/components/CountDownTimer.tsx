@@ -32,7 +32,7 @@ const CountDownTimer = ({ time, onComplete }: Props) => {
   };
 
   return (
-    <div className="absolute z-999 right-4 top-4 text-white text-3xl sm:text-4xl font-bold backdrop-blur-sm bg-orange-800/5 border border-amber-600 px-4 py-2 rounded-lg">
+    <div className="absolute z-999 shadow-[0_2px_10px_rgba(217,119,6,0.45)] right-4 top-4 text-white text-3xl sm:text-4xl font-bold backdrop-blur-sm bg-orange-800/5 border border-amber-600 px-4 py-2 rounded-lg">
       {formatTime(seconds)}
     </div>
   );

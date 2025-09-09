@@ -2,8 +2,8 @@
 import { Question, SectionsInfo } from "@/app/constants/constants";
 import React, { useEffect, useState } from "react";
 import Result from "./Result";
-import Spinner from "./Spinner";
 import CountDownTimer from "./CountDownTimer";
+import BookLoader from "./BookLoader";
 
 interface Props {
   sectionsInfo: SectionsInfo[];
@@ -216,9 +216,9 @@ OUTPUT FORMAT (strictly this):
 
       {error && <p className="text-red-500">{error}</p>}
       {loading ? (
-        <Spinner />
+        <BookLoader />
       ) : reply.length > 0 ? (
-        <div className="md:mx-20 lg:mx-40 mx-5 min-w-fit  border rounded-2xl backdrop-blur-sm bg-orange-800/5 border-amber-600 md:p-10 p-6">
+        <div className="md:mx-20 lg:mx-40 mx-5 min-w-fit shadow-[0_2px_10px_rgba(217,119,6,0.45)] border rounded-2xl backdrop-blur-sm bg-orange-800/5 border-amber-600 md:p-10 p-6">
           <p className="mb-4 text-md sm:text-lg md:text-xl lg:text-2xl ">
             {!ApiCompleted
               ? `${queIDX + 1 + batch * 10 - 10}. ${currentQuestion?.question}`

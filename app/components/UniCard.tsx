@@ -8,7 +8,7 @@ interface Props {
 
 export default function UniCard({ uni }: Props) {
   return (
-    <div className="max-sm:mx-4 max-md:mx-10 md:w-80 h-full xl:w-96 rounded-2xl shadow-xl overflow-hidden backdrop-blur-sm bg-orange-800/5 border border-amber-600">
+    <div className="max-sm:mx-4 max-md:mx-10 md:w-80 h-full xl:w-96 rounded-2xl shadow-[0_2px_10px_rgba(217,119,6,0.45)] overflow-hidden backdrop-blur-sm bg-orange-800/5 border border-amber-600">
       {/* Image */}
       <div className="h-52 w-full relative">
         <Image
