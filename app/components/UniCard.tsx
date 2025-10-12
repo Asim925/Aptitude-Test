@@ -8,7 +8,7 @@ interface Props {
 
 export default function UniCard({ uni }: Props) {
   return (
-    <div className="max-sm:mx-4 max-md:mx-10 md:w-80 h-full xl:w-96 rounded-2xl shadow-[0_2px_10px_rgba(217,119,6,0.45)] overflow-hidden backdrop-blur-sm bg-orange-800/5 border border-amber-600">
+    <div className="max-sm:mx-4 max-md:mx-10 md:w-80 h-full xl:w-96 rounded-2xl shadow-[0_2px_10px_rgba(217,119,6,0.45)] overflow-hidden backdrop-blur-md bg-orange-950/5 border border-amber-600">
       {/* Image */}
       <div className="h-52 w-full relative">
         <Image
@@ -26,7 +26,7 @@ export default function UniCard({ uni }: Props) {
         </h2>
         <p className="text-sm text-gray-300 mb-4">{uni.text}</p>
 
-        {/* Actions */}
+        {/* btn..*/}
         <div className="flex justify-end">
           <Link href={uni.route}>
             <button className="cursor-pointer max-sm:w-fit relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden text-sm sm:text-md font-medium rounded-lg group bg-gradient-to-br from-yellow-700 to-orange-800 group-hover:from-amber-700 group-hover:to-orange-800 text-white focus:outline-none">

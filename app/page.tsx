@@ -7,7 +7,7 @@ export default function Home() {
   return (
     <div className="bg-[url('/main-bg.png')] bg-fixed bg-cover min-h-screen pb-5 ">
       <main className="p-7 mx-2 md:mx-10 lg:mx-15 xl:mx-25 sm:p-10 sm:text-center">
-        <h1 className="text-amber-400 max-sm:text-center text-4xl sm:text-5xl font-extrabold">
+        <h1 className="text-amber-400 max-sm:text-center text-4xl sm:text-5xl font-extrabold ">
           University Aptitude Test Practice
         </h1>
         <p className="text-xl font-semibold text-gray-100 mt-8">

@@ -38,7 +38,7 @@ const Questions = ({ sectionsInfo, time, marks, setMarks }: Props) => {
 
   // =============== Prompt ===============
   const msg = useMemo(() => {
-    return `You are an exam paper generator.
+    return `You are an ECAT/MCAT level exam generator.
 
 TASK:
 Generate a JSON array of exactly 10 Multiple Choice Questions (MCQs) strictly based on the *latest Pakistani Federal and Sindh Board textbooks* for the subject: "${section.name}".
@@ -360,37 +360,39 @@ OUTPUT FORMAT (strictly this):
         <p className="text-white text-xl">No questions available</p>
       )}
 
-      <div className="flex mt-3 gap-2 sm:gap-5 max-sm:flex-col items-center">
-        {!error && (
+      {!loading && !error ? (
+        <div className="flex mt-3 gap-2 sm:gap-5 max-sm:flex-col items-center">
+          {!error && (
+            <button
+              disabled={!selectedOption}
+              onClick={handleNextBTN}
+              className="cursor-pointer relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden sm:text-lg text-sm font-medium rounded-lg group bg-gradient-to-br from-yellow-700 to-orange-800 group-hover:from-amber-700 group-hover:to-orange-800 text-white focus:outline-none"
+            >
+              <span className="relative px-5 py-2.5 transition-all ease-in duration-75 bg-amber-950 rounded-md group-hover:bg-transparent">
+                {!selectedOption ? "Select an option first" : "Next Question"}
+              </span>
+            </button>
+          )}
+          {!ApiCompleted && (
+            <button
+              onClick={handleSkipBTN}
+              className="cursor-pointer max-sm:w-fit relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden text-sm sm:text-lg font-medium rounded-lg group bg-gradient-to-br from-yellow-700 to-orange-800 group-hover:from-amber-700 group-hover:to-orange-800 text-white focus:outline-none"
+            >
+              <span className="relative px-5 py-2.5 transition-all ease-in duration-75 bg-amber-950 rounded-md group-hover:bg-transparent">
+                Skip
+              </span>
+            </button>
+          )}
           <button
-            disabled={!selectedOption}
-            onClick={handleNextBTN}
-            className="cursor-pointer relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden sm:text-lg text-sm font-medium rounded-lg group bg-gradient-to-br from-yellow-700 to-orange-800 group-hover:from-amber-700 group-hover:to-orange-800 text-white focus:outline-none"
+            onClick={() => setTestCompleted(true)}
+            className="cursor-pointer max-sm:mt-5 max-sm:w-fit relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden text-sm sm:text-lg font-medium rounded-lg group bg-gradient-to-br from-red-700 to-red-800 group-hover:from-red-700 group-hover:to-red-800 text-white focus:outline-none"
           >
-            <span className="relative px-5 py-2.5 transition-all ease-in duration-75 bg-amber-950 rounded-md group-hover:bg-transparent">
-              {!selectedOption ? "Select an option first" : "Next Question"}
+            <span className="relative px-5 py-2.5 transition-all ease-in duration-75 bg-red-950 rounded-md group-hover:bg-transparent">
+              Abort Test
             </span>
           </button>
-        )}
-        {!ApiCompleted && (
-          <button
-            onClick={handleSkipBTN}
-            className="cursor-pointer max-sm:w-fit relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden text-sm sm:text-lg font-medium rounded-lg group bg-gradient-to-br from-yellow-700 to-orange-800 group-hover:from-amber-700 group-hover:to-orange-800 text-white focus:outline-none"
-          >
-            <span className="relative px-5 py-2.5 transition-all ease-in duration-75 bg-amber-950 rounded-md group-hover:bg-transparent">
-              Skip
-            </span>
-          </button>
-        )}
-        <button
-          onClick={() => setTestCompleted(true)}
-          className="cursor-pointer max-sm:mt-5 max-sm:w-fit relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden text-sm sm:text-lg font-medium rounded-lg group bg-gradient-to-br from-red-700 to-red-800 group-hover:from-red-700 group-hover:to-red-800 text-white focus:outline-none"
-        >
-          <span className="relative px-5 py-2.5 transition-all ease-in duration-75 bg-red-950 rounded-md group-hover:bg-transparent">
-            Abort Test
-          </span>
-        </button>
-      </div>
+        </div>
+      ) : null}
 
       {error && (
         <button
