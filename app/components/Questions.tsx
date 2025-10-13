@@ -4,6 +4,7 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import Result from "./Result";
 import CountDownTimer from "./CountDownTimer";
 import BookLoader from "./BookLoader";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface Props {
   sectionsInfo: SectionsInfo[];
@@ -14,18 +15,14 @@ interface Props {
 
 const Questions = ({ sectionsInfo, time, marks, setMarks }: Props) => {
   const [sectionIDX, setSectionIDX] = useState(0);
-  // derived, no extra useState (had no idea about this)
   const section = sectionsInfo[sectionIDX];
-
   const [reply, setReply] = useState<Question[]>([]);
   const [batch, setBatch] = useState(1);
   const [queIDX, setQueIDX] = useState(0);
-
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [ApiCompleted, setApiCompleted] = useState(false);
 
-  // request id to ignore stale responses
   const requestIdRef = useRef(0);
   const mountedRef = useRef(true);
 
@@ -36,7 +33,6 @@ const Questions = ({ sectionsInfo, time, marks, setMarks }: Props) => {
     };
   }, []);
 
-  // =============== Prompt ===============
   const msg = useMemo(() => {
     return `You are an ECAT/MCAT level exam generator.
 
@@ -89,11 +85,8 @@ OUTPUT FORMAT (strictly this):
     "correct": "..."
   }
 ]
-
 `;
   }, [section.name]);
-
-  // =============== API Call ===============
 
   const sendMessage = async (message: string) => {
     setLoading(true);
@@ -150,12 +143,8 @@ OUTPUT FORMAT (strictly this):
     }
   };
 
-  // When sectionIDX or batch changes we load questions (unless ApiCompleted)
   useEffect(() => {
-    if (!ApiCompleted) {
-      // clamp: if last batch, we still ask for 10 but UI logic will handle counts
-      sendMessage(msg);
-    }
+    if (!ApiCompleted) sendMessage(msg);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sectionIDX, batch]);
 
@@ -166,14 +155,11 @@ OUTPUT FORMAT (strictly this):
     setSelectedOption(value);
   };
 
-  // Helper: total questions before this section (for numbering)
   const totalBeforeSection = sectionsInfo
     .slice(0, sectionIDX)
     .reduce((sum, s) => sum + s.questions, 0);
 
-  // =============== Next Button ===============
   const handleNextBTN = () => {
-    // Protect against no question
     if (!currentQuestion) return;
 
     if (selectedOption === currentQuestion.correct) {
@@ -181,69 +167,6 @@ OUTPUT FORMAT (strictly this):
     }
 
     setSelectedOption("");
-
-    const nextIndex = queIDX + 1;
-
-    // If not end of current reply batch, just move to next
-    if (nextIndex < reply.length) {
-      setQueIDX(nextIndex);
-      return;
-    }
-
-    // end of current batch
-    const questionsAlreadyServedInSection = (batch - 1) * 10 + reply.length;
-    const sectionTotal = section.questions;
-
-    // if we've served all required questions for this section
-    if (questionsAlreadyServedInSection >= sectionTotal) {
-      // move to next section or finish
-      if (sectionIDX < sectionsInfo.length - 1) {
-        setSectionIDX((prev) => prev + 1);
-        setBatch(1);
-        setReply([]); // clear until next fetch lands
-        setQueIDX(0);
-      } else {
-        // last section finished => if skipped exist show skipped set, otherwise mark ApiCompleted
-        if (skippedRef.current.length > 0) {
-          // show skipped questions
-          setReply(skippedRef.current.slice()); // copy
-          setQueIDX(0);
-          setApiCompleted(true);
-          // clear skippedRef so we don't loop
-          skippedRef.current = [];
-          setSkipped([]); // clear state too
-        } else {
-          setApiCompleted(true);
-          setTestCompleted(true);
-        }
-      }
-    } else {
-      // need next batch for same section
-      setBatch((prev) => prev + 1);
-      // sendMessage will be triggered by effect; keep reply until new arrives
-    }
-  };
-
-  // skipped is stored in both state (for re-render) and a ref for correct immediate checks
-  const [skipped, setSkipped] = useState<Question[]>([]);
-  const skippedRef = useRef<Question[]>([]);
-  // keep ref & state in sync when state changes
-  useEffect(() => {
-    skippedRef.current = skipped;
-  }, [skipped]);
-
-  // ============ skip button ========== //
-  const [testCompleted, setTestCompleted] = useState(false);
-
-  const handleSkipBTN = () => {
-    if (!currentQuestion) return;
-
-    // push to skipped (both ref and state)
-    skippedRef.current = [...skippedRef.current, currentQuestion];
-    setSkipped(skippedRef.current.slice());
-
-    setSelectedOption("");
-
     const nextIndex = queIDX + 1;
 
     if (nextIndex < reply.length) {
@@ -251,19 +174,16 @@ OUTPUT FORMAT (strictly this):
       return;
     }
 
-    // end of batch
     const questionsAlreadyServedInSection = (batch - 1) * 10 + reply.length;
     const sectionTotal = section.questions;
 
     if (questionsAlreadyServedInSection >= sectionTotal) {
-      // section done, move to next section or show skipped
       if (sectionIDX < sectionsInfo.length - 1) {
         setSectionIDX((prev) => prev + 1);
         setBatch(1);
         setReply([]);
         setQueIDX(0);
       } else {
-        // last section finished
         if (skippedRef.current.length > 0) {
           setReply(skippedRef.current.slice());
           setQueIDX(0);
@@ -276,20 +196,61 @@ OUTPUT FORMAT (strictly this):
         }
       }
     } else {
-      // fetch next batch for same section
       setBatch((prev) => prev + 1);
     }
   };
 
-  // If user clicks Reload Questions after error or wants to re-run the same batch
+  const [skipped, setSkipped] = useState<Question[]>([]);
+  const skippedRef = useRef<Question[]>([]);
+  useEffect(() => {
+    skippedRef.current = skipped;
+  }, [skipped]);
+
+  const [testCompleted, setTestCompleted] = useState(false);
+
+  const handleSkipBTN = () => {
+    if (!currentQuestion) return;
+    skippedRef.current = [...skippedRef.current, currentQuestion];
+    setSkipped(skippedRef.current.slice());
+    setSelectedOption("");
+
+    const nextIndex = queIDX + 1;
+    if (nextIndex < reply.length) {
+      setQueIDX(nextIndex);
+      return;
+    }
+
+    const questionsAlreadyServedInSection = (batch - 1) * 10 + reply.length;
+    const sectionTotal = section.questions;
+
+    if (questionsAlreadyServedInSection >= sectionTotal) {
+      if (sectionIDX < sectionsInfo.length - 1) {
+        setSectionIDX((prev) => prev + 1);
+        setBatch(1);
+        setReply([]);
+        setQueIDX(0);
+      } else {
+        if (skippedRef.current.length > 0) {
+          setReply(skippedRef.current.slice());
+          setQueIDX(0);
+          setApiCompleted(true);
+          skippedRef.current = [];
+          setSkipped([]);
+        } else {
+          setApiCompleted(true);
+          setTestCompleted(true);
+        }
+      }
+    } else {
+      setBatch((prev) => prev + 1);
+    }
+  };
+
   const handleReload = () => {
     setError("");
-    // reset selection & re-request same section & batch
     setSelectedOption("");
     sendMessage(msg);
   };
-
-  // ======================= UI ========================= //
 
   if (testCompleted)
     return (
@@ -302,7 +263,6 @@ OUTPUT FORMAT (strictly this):
       />
     );
 
-  // compute displayed question number (global)
   const displayedNumber = !ApiCompleted
     ? totalBeforeSection + (batch - 1) * 10 + queIDX + 1
     : queIDX + 1;
@@ -324,55 +284,63 @@ OUTPUT FORMAT (strictly this):
       {loading ? (
         <BookLoader />
       ) : reply.length > 0 ? (
-        <div className="md:mx-20 lg:mx-40 mx-5 min-w-fit shadow-[0_2px_10px_rgba(217,119,6,0.45)] border rounded-2xl backdrop-blur-sm bg-orange-800/5 border-amber-600 md:p-10 p-6">
-          <p className="mb-4 text-md sm:text-lg md:text-xl lg:text-2xl ">
-            {`${displayedNumber}. ${currentQuestion?.question}`}
-          </p>
-          <div>
-            {currentQuestion?.options.map((option, idx) => {
-              const radioId = `q-${sectionIDX}-b-${batch}-i-${queIDX}-opt-${idx}`;
-              return (
-                <div
-                  key={idx}
-                  className="text-md sm:text-lg flex items-center w-full gap-1 ps-3 -ml-3"
-                >
-                  <input
-                    id={radioId}
-                    type="radio"
-                    value={option}
-                    checked={selectedOption === option}
-                    name={`question-${displayedNumber}`}
-                    className="w-4 h-4 cursor-pointer sm:w-5 sm:h-5 md:w-6 md:h-6 accent-orange-400"
-                    onChange={(e) => handleChange(e.target.value)}
-                  />
-                  <label
-                    htmlFor={radioId}
-                    className="w-full py-2 ms-2 cursor-pointer text-white"
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={displayedNumber}
+            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.9, y: -20 }}
+            transition={{ duration: 0.2, ease: "easeInOut" }}
+            className="md:mx-20 lg:mx-40 mx-5 min-w-fit shadow-[0_2px_10px_rgba(217,119,6,0.45)] border rounded-2xl backdrop-blur-sm bg-orange-800/5 border-amber-600 md:p-10 p-6"
+          >
+            <p className="mb-4 text-md sm:text-lg md:text-xl lg:text-2xl ">
+              {`${displayedNumber}. ${currentQuestion?.question}`}
+            </p>
+            <div>
+              {currentQuestion?.options.map((option, idx) => {
+                const radioId = `q-${sectionIDX}-b-${batch}-i-${queIDX}-opt-${idx}`;
+                return (
+                  <div
+                    key={idx}
+                    className="text-md sm:text-lg flex items-center w-full gap-1 ps-3 -ml-3"
                   >
-                    {option}
-                  </label>
-                </div>
-              );
-            })}
-          </div>
-        </div>
+                    <input
+                      id={radioId}
+                      type="radio"
+                      value={option}
+                      checked={selectedOption === option}
+                      name={`question-${displayedNumber}`}
+                      className="w-4 h-4 cursor-pointer sm:w-5 sm:h-5 md:w-6 md:h-6 accent-orange-400"
+                      onChange={(e) => handleChange(e.target.value)}
+                    />
+                    <label
+                      htmlFor={radioId}
+                      className="w-full py-2 ms-2 cursor-pointer text-white"
+                    >
+                      {option}
+                    </label>
+                  </div>
+                );
+              })}
+            </div>
+          </motion.div>
+        </AnimatePresence>
       ) : (
         <p className="text-white text-xl">No questions available</p>
       )}
 
       {!loading && !error ? (
         <div className="flex mt-3 gap-2 sm:gap-5 max-sm:flex-col items-center">
-          {!error && (
-            <button
-              disabled={!selectedOption}
-              onClick={handleNextBTN}
-              className="cursor-pointer relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden sm:text-lg text-sm font-medium rounded-lg group bg-gradient-to-br from-yellow-700 to-orange-800 group-hover:from-amber-700 group-hover:to-orange-800 text-white focus:outline-none"
-            >
-              <span className="relative px-5 py-2.5 transition-all ease-in duration-75 bg-amber-950 rounded-md group-hover:bg-transparent">
-                {!selectedOption ? "Select an option first" : "Next Question"}
-              </span>
-            </button>
-          )}
+          <button
+            disabled={!selectedOption}
+            onClick={handleNextBTN}
+            className="cursor-pointer relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden sm:text-lg text-sm font-medium rounded-lg group bg-gradient-to-br from-yellow-700 to-orange-800 group-hover:from-amber-700 group-hover:to-orange-800 text-white focus:outline-none"
+          >
+            <span className="relative px-5 py-2.5 transition-all ease-in duration-75 bg-amber-950 rounded-md group-hover:bg-transparent">
+              {!selectedOption ? "Select an option first" : "Next Question"}
+            </span>
+          </button>
+
           {!ApiCompleted && (
             <button
               onClick={handleSkipBTN}
@@ -383,6 +351,7 @@ OUTPUT FORMAT (strictly this):
               </span>
             </button>
           )}
+
           <button
             onClick={() => setTestCompleted(true)}
             className="cursor-pointer max-sm:mt-5 max-sm:w-fit relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden text-sm sm:text-lg font-medium rounded-lg group bg-gradient-to-br from-red-700 to-red-800 group-hover:from-red-700 group-hover:to-red-800 text-white focus:outline-none"
@@ -396,9 +365,7 @@ OUTPUT FORMAT (strictly this):
 
       {error && (
         <button
-          onClick={() => {
-            handleReload();
-          }}
+          onClick={handleReload}
           className="cursor-pointer max-sm:w-fit relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden text-sm sm:text-lg font-medium rounded-lg group bg-gradient-to-br from-yellow-700 to-orange-800 group-hover:from-amber-700 group-hover:to-orange-800 text-white focus:outline-none"
         >
           <span className="relative px-5 py-2.5 transition-all ease-in duration-75 bg-amber-950 rounded-md group-hover:bg-transparent">

@@ -252,23 +252,37 @@ export const dowTestInfo = [
 export const kuSectionsInfo = [
   {
     name: "English",
-    questions: 25,
+    questions: 20,
     time: "upto you",
     weightage: "25%",
     negative: "None",
   },
   {
     name: "General Knowledge",
-    questions: 25,
+    questions: 10,
     time: "upto you",
     weightage: "25%",
     negative: "None",
   },
   {
-    name: "Subject-Specific (Science/Commerce/Arts)",
-    questions: 50,
+    name: "Physics",
+    questions: 20,
     time: "upto you",
-    weightage: "50%",
+    weightage: "20%",
+    negative: "None",
+  },
+  {
+    name: "Chemistry",
+    questions: 20,
+    time: "upto you",
+    weightage: "20%",
+    negative: "None",
+  },
+  {
+    name: "Mathematics",
+    questions: 30,
+    time: "upto you",
+    weightage: "25%",
     negative: "None",
   },
 ];
@@ -300,14 +314,14 @@ export const kuTestInfo = [
 export const lumsSectionsInfo = [
   {
     name: "Quantitative Reasoning",
-    questions: 35,
+    questions: 40,
     time: "upto you",
     weightage: "35%",
     negative: "None",
   },
   {
     name: "Verbal Reasoning",
-    questions: 35,
+    questions: 30,
     time: "upto you",
     weightage: "35%",
     negative: "None",
@@ -348,14 +362,14 @@ export const lumsTestInfo = [
 export const ibaSectionsInfo = [
   {
     name: "English",
-    questions: 25,
+    questions: 30,
     time: "upto you",
     weightage: "30%",
     negative: "None",
   },
   {
     name: "Mathematics",
-    questions: 35,
+    questions: 30,
     time: "upto you",
     weightage: "40%",
     negative: "None",
@@ -465,28 +479,28 @@ export const akuTestInfo = [
 export const kemuSectionsInfo = [
   {
     name: "Biology",
-    questions: 68,
+    questions: 70,
     time: "60 minutes",
     weightage: "34%",
     negative: "None",
   },
   {
     name: "Chemistry",
-    questions: 56,
+    questions: 50,
     time: "45 minutes",
     weightage: "28%",
     negative: "None",
   },
   {
     name: "Physics",
-    questions: 56,
+    questions: 50,
     time: "45 minutes",
     weightage: "28%",
     negative: "None",
   },
   {
     name: "English",
-    questions: 20,
+    questions: 30,
     time: "30 minutes",
     weightage: "10%",
     negative: "None",
