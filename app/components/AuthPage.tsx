@@ -36,7 +36,7 @@ const AuthPage = () => {
     // Determine the redirect URL based on the environment
     const redirectUrl =
       process.env.NODE_ENV === "production"
-        ? "https://aptitude-test.vercel.app"
+        ? "https://aptitude-test-one.vercel.app"
         : "http://localhost:3000";
 
     const { error } = await supabase.auth.signUp({
