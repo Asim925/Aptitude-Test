@@ -1,6 +1,7 @@
 import Link from "next/link";
 import React from "react";
 import Footer from "./Footer";
+import Navbar from "./Navbar";
 
 interface Props {
   marks: number;
@@ -45,36 +46,41 @@ const Result = ({ marks, outOf }: Props) => {
   const percentage = (marks / outOf) * 100;
 
   return (
-    <div className="flex flex-col gap-7 justify-center items-center bg-[url('/main-bg.png')] bg-fixed bg-cover min-h-screen">
-      <h1 className="mb-5 px-5 text-center text-amber-400 text-3xl lg:text-4xl xl:text-5xl font-extrabold ">
-        Test Completed 🎉
-      </h1>
-      <p className="text-md sm:text-lg md:text-xl lg:text-2xl">
-        You got <span className="text-amber-400 font-bold">{marks}</span> out of{" "}
-        <span className="text-amber-400 font-bold">{outOf}</span>
-      </p>
-      <p className="text-md sm:text-lg md:text-xl lg:text-2xl">
-        Percentage:{" "}
-        <span className="text-amber-400 font-bold">
-          {getPercentage(marks, outOf)}
-        </span>
-      </p>
-      <p className="text-md sm:text-lg md:text-xl lg:text-2xl">
-        Grade:{" "}
-        <span className="text-amber-400 font-bold">{getGrade(percentage)}</span>
-      </p>
-      <p className="text-md sm:text-lg md:text-xl lg:text-2xl text-center max-w-[90%] sm:max-w-[50%]">
-        {getKudosMessage(percentage)}
-      </p>
-      <Link href={"/"}>
-        <button className="shadow-[0_2px_10px_rgba(217,119,6,0.45)] cursor-pointer max-sm:w-fit relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden text-sm sm:text-lg font-medium rounded-lg group bg-gradient-to-br from-yellow-700 to-orange-800 group-hover:from-amber-700 group-hover:to-orange-800 text-white focus:outline-none">
-          <span className="relative px-5 py-2.5 transition-all ease-in duration-75 bg-amber-950 rounded-md group-hover:bg-transparent">
-            Go to Home
+    <>
+      <Navbar />
+      <div className="flex flex-col gap-7 justify-center items-center bg-[url('/main-bg.png')] bg-fixed bg-cover min-h-screen">
+        <h1 className="mb-5 px-5 text-center text-amber-400 text-3xl lg:text-4xl xl:text-5xl font-extrabold ">
+          Test Completed 🎉
+        </h1>
+        <p className="text-md sm:text-lg md:text-xl lg:text-2xl">
+          You got <span className="text-amber-400 font-bold">{marks}</span> out
+          of <span className="text-amber-400 font-bold">{outOf}</span>
+        </p>
+        <p className="text-md sm:text-lg md:text-xl lg:text-2xl">
+          Percentage:{" "}
+          <span className="text-amber-400 font-bold">
+            {getPercentage(marks, outOf)}
           </span>
-        </button>
-      </Link>
-      <Footer />
-    </div>
+        </p>
+        <p className="text-md sm:text-lg md:text-xl lg:text-2xl">
+          Grade:{" "}
+          <span className="text-amber-400 font-bold">
+            {getGrade(percentage)}
+          </span>
+        </p>
+        <p className="text-md sm:text-lg md:text-xl lg:text-2xl text-center max-w-[90%] sm:max-w-[50%]">
+          {getKudosMessage(percentage)}
+        </p>
+        <Link href={"/"}>
+          <button className="shadow-[0_2px_10px_rgba(217,119,6,0.45)] cursor-pointer max-sm:w-fit relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden text-sm sm:text-lg font-medium rounded-lg group bg-gradient-to-br from-yellow-700 to-orange-800 group-hover:from-amber-700 group-hover:to-orange-800 text-white focus:outline-none">
+            <span className="relative px-5 py-2.5 transition-all ease-in duration-75 bg-amber-950 rounded-md group-hover:bg-transparent">
+              Go to Home
+            </span>
+          </button>
+        </Link>
+        <Footer />
+      </div>
+    </>
   );
 };
 
