@@ -120,7 +120,7 @@ const AuthPage = () => {
             </button>
 
             <p className="text-white">
-              Don't have an account?{" "}
+              Don&apos;t have an account?{" "}
               <button
                 onClick={toggleForm}
                 className="text-orange-500 font-semibold hover:cursor-pointer"

@@ -6,7 +6,6 @@ import Link from "next/link";
 import Footer from "./Footer";
 import { motion, Variants } from "framer-motion";
 import Navbar from "./Navbar";
-import { div } from "framer-motion/client";
 
 interface Props {
   uni: University;

@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { supabase } from "@/utils/supabaseClient";
+import Link from "next/link";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -20,9 +21,9 @@ const Navbar = () => {
 
         {/* Desktop Menu */}
         <div className="hidden md:flex items-center space-x-8">
-          <a href="/" className="hover:text-orange-400 transition">
+          <Link href="/" className="hover:text-orange-400 transition">
             Home
-          </a>
+          </Link>
 
           <button
             onClick={handleLogout}
@@ -46,12 +47,12 @@ const Navbar = () => {
       {/* Mobile Dropdown */}
       {isOpen && (
         <div className="md:hidden mt-4 flex flex-col space-y-4 pb-4 animate-in fade-in slide-in-from-top-2">
-          <a
+          <Link
             href="/"
             className="block px-2 py-1 hover:bg-orange-500/20 rounded"
           >
             Home
-          </a>
+          </Link>
 
           <button
             onClick={handleLogout}

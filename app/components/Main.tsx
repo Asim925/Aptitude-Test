@@ -4,7 +4,6 @@ import Footer from "./Footer";
 import UniCard from "./UniCard";
 import { univerisities } from "../constants/constants";
 import { motion, Variants } from "framer-motion";
-import { supabase } from "@/utils/supabaseClient";
 import Navbar from "./Navbar";
 
 const Main = () => {

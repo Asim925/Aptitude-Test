@@ -5,7 +5,6 @@ import {
   akuTestInfo,
   univerisities,
 } from "../constants/constants";
-import Navbar from "../components/Navbar";
 
 const Page = () => {
   return (
